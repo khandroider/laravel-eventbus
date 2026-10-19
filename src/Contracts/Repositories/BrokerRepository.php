@@ -16,7 +16,7 @@ interface BrokerRepository
      * Блокирующий цикл чтения своей очереди. $onMessage(string $body) вызывается на каждое сообщение;
      * вернулся без исключения — ack, выбросил — nack с возвратом в очередь.
      *
-     * @param Closure(string): void $onMessage
+     * @param  Closure(string): void  $onMessage
      */
     public function consume(Closure $onMessage): void;
 }

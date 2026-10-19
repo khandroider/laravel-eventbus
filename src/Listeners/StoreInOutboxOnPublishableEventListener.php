@@ -15,8 +15,7 @@ final readonly class StoreInOutboxOnPublishableEventListener
 {
     public function __construct(
         private Dispatcher $bus,
-    ) {
-    }
+    ) {}
 
     public function handle(PublishableEvent $event): void
     {

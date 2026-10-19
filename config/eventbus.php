@@ -6,7 +6,7 @@ use Illuminate\Support\Str;
 
 return [
     // Имя этого приложения в сообщениях (поле `source` и первый сегмент ключа маршрутизации).
-    'source' => env('EVENTBUS_SOURCE', Str::snake((string) env('APP_NAME', 'laravel'))),
+    'source' => env('EVENTBUS_SOURCE', Str::slug((string) env('APP_NAME', 'laravel'), '_')),
 
     // Соединение из config/queue.php с драйвером rabbitmq, у которого берём канал.
     'connection' => env('EVENTBUS_QUEUE_CONNECTION', 'rabbitmq'),
@@ -28,7 +28,7 @@ return [
 
     'inbox' => [
         // Своя очередь этого приложения.
-        'queue' => env('EVENTBUS_INBOX_QUEUE', Str::snake((string) env('APP_NAME', 'laravel')) . '.inbox'),
+        'queue' => env('EVENTBUS_INBOX_QUEUE', Str::slug((string) env('APP_NAME', 'laravel'), '_').'.inbox'),
 
         // Что слушать: точка обмена => ключи маршрутизации. Пусто — ничего не слушаем.
         // 'bindings' => ['events' => ['crm.#', 'billing.invoice.*']],

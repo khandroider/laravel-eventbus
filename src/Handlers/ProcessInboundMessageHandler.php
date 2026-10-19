@@ -27,8 +27,7 @@ final readonly class ProcessInboundMessageHandler
         private Dispatcher $events,
         private Repository $config,
         private LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     public function handle(ProcessInboundMessageCommand $command): void
     {

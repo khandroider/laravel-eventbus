@@ -10,6 +10,5 @@ final readonly class ProcessInboundMessageCommand
 {
     public function __construct(
         public UuidInterface $messageId,
-    ) {
-    }
+    ) {}
 }

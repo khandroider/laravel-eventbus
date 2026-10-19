@@ -20,8 +20,7 @@ final readonly class IncomingMessageDTO
         public array $payload,
         public Carbon $occurredAt,
         public ?string $source,
-    ) {
-    }
+    ) {}
 
     public static function fromArray(array $data): self
     {

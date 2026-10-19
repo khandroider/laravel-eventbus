@@ -25,8 +25,7 @@ final readonly class MessageFailureService
         private Repository $config,
         private Dispatcher $events,
         private LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     public function fail(Message $message, Throwable $error): void
     {
@@ -38,7 +37,7 @@ final readonly class MessageFailureService
         );
 
         $message->setAttempts($attempts);
-        $message->setLastError($error::class . ': ' . $error->getMessage());
+        $message->setLastError($error::class.': '.$error->getMessage());
         $message->setNextRetryAt(Carbon::now()->addSeconds($backoff));
         $this->repository->update($message);
 

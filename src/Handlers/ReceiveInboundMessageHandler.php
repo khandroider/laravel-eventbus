@@ -18,8 +18,7 @@ final readonly class ReceiveInboundMessageHandler
         private StoreMessageRepository $repository,
         private Dispatcher $bus,
         private LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     public function handle(ReceiveInboundMessageCommand $command): void
     {

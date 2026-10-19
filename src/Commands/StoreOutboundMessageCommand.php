@@ -10,6 +10,5 @@ final readonly class StoreOutboundMessageCommand
 {
     public function __construct(
         public PublishableEvent $event,
-    ) {
-    }
+    ) {}
 }

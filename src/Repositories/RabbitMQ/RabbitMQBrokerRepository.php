@@ -23,10 +23,15 @@ use VladimirYuldashev\LaravelQueueRabbitMQ\Queue\RabbitMQQueue;
 final class RabbitMQBrokerRepository implements BrokerRepository
 {
     private const string EXCHANGE_TYPE = 'topic';
+
     private const string CONTENT_TYPE = 'application/json';
+
     private const int ENVELOPE_VERSION = 1;
+
     private const int PREFETCH_COUNT = 10;
+
     private const float CONFIRM_TIMEOUT_SECONDS = 5.0;
+
     private const int REQUEUE_PAUSE_SECONDS = 1;
 
     private ?AMQPChannel $channel = null;
@@ -35,8 +40,7 @@ final class RabbitMQBrokerRepository implements BrokerRepository
         private readonly QueueManager $queue,
         private readonly Repository $config,
         private readonly LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     public function publish(Message $message): void
     {
@@ -139,7 +143,7 @@ final class RabbitMQBrokerRepository implements BrokerRepository
         $channel->exchange_declare((string) $this->config->get('eventbus.exchange'), self::EXCHANGE_TYPE, false, true, false);
         $channel->confirm_select();
         $channel->set_nack_handler(static function (AMQPMessage $amqpMessage): void {
-            throw new RuntimeException('Broker rejected message ' . ($amqpMessage->get('message_id') ?? ''));
+            throw new RuntimeException('Broker rejected message '.($amqpMessage->get('message_id') ?? ''));
         });
 
         return $this->channel = $channel;

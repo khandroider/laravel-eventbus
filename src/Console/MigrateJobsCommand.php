@@ -24,6 +24,7 @@ final class MigrateJobsCommand extends Command
     protected $description = 'Переносит незавершённые задачи из database-очереди в текущее соединение';
 
     private const int CHUNK = 100;
+
     private const string DEFAULT_TABLE = 'jobs';
 
     public function __construct(

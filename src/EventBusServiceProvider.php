@@ -30,8 +30,10 @@ use Khandroider\EventBus\Repositories\RabbitMQ\RabbitMQBrokerRepository;
 
 final class EventBusServiceProvider extends ServiceProvider
 {
-    private const string CONFIG_PATH = __DIR__ . '/../config/eventbus.php';
-    private const string MIGRATIONS_PATH = __DIR__ . '/../database/migrations';
+    private const string CONFIG_PATH = __DIR__.'/../config/eventbus.php';
+
+    private const string MIGRATIONS_PATH = __DIR__.'/../database/migrations';
+
     private const string CONFIG_TAG = 'eventbus-config';
 
     public array $bindings = [

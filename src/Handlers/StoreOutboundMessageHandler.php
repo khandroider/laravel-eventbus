@@ -13,8 +13,7 @@ final readonly class StoreOutboundMessageHandler
     public function __construct(
         private PublishableEventToMessageMapper $mapper,
         private StoreMessageRepository $repository,
-    ) {
-    }
+    ) {}
 
     public function handle(StoreOutboundMessageCommand $command): void
     {

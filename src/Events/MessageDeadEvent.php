@@ -17,6 +17,5 @@ final readonly class MessageDeadEvent
         public MessageDirectionEnum $direction,
         public string $type,
         public string $error,
-    ) {
-    }
+    ) {}
 }

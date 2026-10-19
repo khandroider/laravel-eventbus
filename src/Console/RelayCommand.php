@@ -27,7 +27,9 @@ final class RelayCommand extends Command
     protected $description = 'Отправляет исходящие сообщения из eventbus_messages в брокер';
 
     private const int IDLE_SLEEP_SECONDS = 1;
+
     private const int BROKER_DOWN_SLEEP_SECONDS = 5;
+
     private const int BROKER_ERROR_LOG_INTERVAL_SECONDS = 60;
 
     private ?Carbon $lastBrokerErrorLoggedAt = null;
@@ -57,6 +59,7 @@ final class RelayCommand extends Command
 
                 if (! $once) {
                     sleep(self::BROKER_DOWN_SLEEP_SECONDS);
+
                     continue;
                 }
             }
@@ -89,6 +92,7 @@ final class RelayCommand extends Command
                     break;
                 } catch (Throwable $e) {
                     $this->failure->fail($message, $e);
+
                     continue;
                 }
 

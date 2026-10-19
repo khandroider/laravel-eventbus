@@ -24,7 +24,8 @@ final readonly class EventHydrator
 {
     /**
      * @template T of object
-     * @param class-string<T> $class
+     *
+     * @param  class-string<T>  $class
      * @return T
      */
     public function hydrate(string $class, array $payload): object
@@ -32,7 +33,7 @@ final readonly class EventHydrator
         $constructor = (new ReflectionClass($class))->getConstructor();
 
         if ($constructor === null) {
-            return new $class();
+            return new $class;
         }
 
         $arguments = [];
@@ -47,6 +48,7 @@ final readonly class EventHydrator
 
                 if ($parameter->allowsNull()) {
                     $arguments[$name] = null;
+
                     continue;
                 }
 
@@ -93,7 +95,7 @@ final readonly class EventHydrator
 
         return match (true) {
             is_a($name, BackedEnum::class, true) => $name::from($value),
-            is_a($name, UnitEnum::class, true) => constant($name . '::' . $value),
+            is_a($name, UnitEnum::class, true) => constant($name.'::'.$value),
             is_a($name, UuidInterface::class, true) => Uuid::fromString((string) $value),
             is_a($name, DateTimeInterface::class, true) => (new ReflectionClass($name))->isInstantiable()
                 ? new $name((string) $value)

@@ -10,7 +10,8 @@ use Illuminate\Support\Facades\Schema;
  * Одна таблица для исходящих (outbox) и входящих (inbox) сообщений.
  * processed_at: для исходящих — отправлено в брокер, для входящих — обработано.
  */
-return new class extends Migration {
+return new class extends Migration
+{
     public function up(): void
     {
         Schema::create('eventbus_messages', function (Blueprint $table) {

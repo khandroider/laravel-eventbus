@@ -10,6 +10,5 @@ final readonly class ReceiveInboundMessageCommand
 {
     public function __construct(
         public IncomingMessageDTO $dto,
-    ) {
-    }
+    ) {}
 }

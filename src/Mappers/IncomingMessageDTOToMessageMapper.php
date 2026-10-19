@@ -12,7 +12,7 @@ final readonly class IncomingMessageDTOToMessageMapper
 {
     public function map(IncomingMessageDTO $dto): Message
     {
-        $message = new Message();
+        $message = new Message;
         $message->setId($dto->id);
         $message->setDirection(MessageDirectionEnum::Inbound);
         $message->setType($dto->type);
