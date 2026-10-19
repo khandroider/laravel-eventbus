@@ -127,11 +127,6 @@ php artisan eventbus:migrate-jobs --from=database --to=rabbitmq
 Pending rows of the `jobs` table are pushed to the new connection (delays preserved) and deleted.
 Reserved rows (a worker is on them) are left alone and counted in the output.
 
-## Docs
-
-* [docs/contract.md](docs/contract.md) — message format for other services (any language).
-* [docs/for-business.md](docs/for-business.md) — plain-language explanation for stakeholders (Russian).
-
 ## License
 
 MIT
