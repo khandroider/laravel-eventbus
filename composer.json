@@ -1,0 +1,35 @@
+{
+    "name": "khandroider/laravel-eventbus",
+    "description": "Transactional outbox and idempotent inbox over RabbitMQ for Laravel. Mark an event with PublishableEvent and it is published reliably.",
+    "type": "library",
+    "license": "MIT",
+    "keywords": ["laravel", "rabbitmq", "outbox", "inbox", "event-bus", "amqp"],
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/database": "^11.0|^12.0",
+        "illuminate/events": "^11.0|^12.0",
+        "illuminate/console": "^11.0|^12.0",
+        "illuminate/contracts": "^11.0|^12.0",
+        "illuminate/queue": "^11.0|^12.0",
+        "illuminate/bus": "^11.0|^12.0",
+        "vladimir-yuldashev/laravel-queue-rabbitmq": "^14.0",
+        "ramsey/uuid": "^4.7",
+        "nesbot/carbon": "^2.72|^3.0",
+        "psr/log": "^3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Khandroider\\EventBus\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Khandroider\\EventBus\\EventBusServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
