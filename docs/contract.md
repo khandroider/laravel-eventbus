@@ -6,8 +6,9 @@ Any service, in any language, can publish to and consume from the bus using this
 
 * Broker: RabbitMQ, AMQP 0-9-1.
 * Exchange: `events` (configurable), type `topic`, durable.
-* Routing key: `{source}.{module}.{type}`, e.g. `taphr.candidate.candidate_created`.
-  Subscribe with patterns: `taphr.candidate.*`, `taphr.#`, `#`.
+* Routing key: `{source}.{type}`, e.g. `hr.candidate_created`, where `source` is the producing project (channel).
+  Subscribe with patterns: `hr.candidate_*` is **not** valid AMQP (wildcards match whole dot-separated words), so use
+  `hr.*` for every event of one project, `#` for everything, or exact keys like `hr.candidate_created`.
 * Each consumer owns a durable queue bound to the exchange. RabbitMQ delivers a copy to every bound queue;
   several instances of one service share one queue.
 * Messages are persistent (`delivery_mode=2`), `content_type=application/json`,
@@ -20,7 +21,7 @@ Any service, in any language, can publish to and consume from the bus using this
   "version": 1,
   "id": "018f3c2e-7f1a-7b3a-9c1d-2f4e5a6b7c8d",
   "type": "candidate_created",
-  "source": "taphr",
+  "source": "hr",
   "occurred_at": "2026-10-19T10:00:00.000000Z",
   "payload": {
     "candidateId": "8f0a...",
@@ -36,7 +37,7 @@ Any service, in any language, can publish to and consume from the bus using this
 | `version`     | int    | Envelope version, currently `1`. |
 | `id`          | string | UUID. Consumers deduplicate by it: the same `id` must never be processed twice. |
 | `type`        | string | Event name, `snake_case`, no dots. Stable across versions of the producer. |
-| `source`      | string | Producing application, `snake_case`. |
+| `source`      | string | Producing project / channel, `snake_case`; also the first segment of the routing key. |
 | `occurred_at` | string | ISO-8601 in UTC with `Z`. |
 | `payload`     | object | Event data. Keys as the producer names them (camelCase in PHP producers). |
 
@@ -65,7 +66,7 @@ conn = pika.BlockingConnection(pika.URLParameters("amqp://guest:guest@rabbitmq:5
 ch = conn.channel()
 ch.exchange_declare("events", exchange_type="topic", durable=True)
 ch.queue_declare("crm.inbox", durable=True)
-ch.queue_bind("crm.inbox", "events", routing_key="taphr.candidate.*")
+ch.queue_bind("crm.inbox", "events", routing_key="hr.*")
 
 def on_message(ch, method, props, body):
     msg = json.loads(body)
@@ -79,5 +80,5 @@ ch.basic_consume("crm.inbox", on_message)
 ch.start_consuming()
 ```
 
-Publishing from Python uses the same envelope with `source: "crm"` and routing key `crm.{module}.{type}`;
+Publishing from Python uses the same envelope with `source: "crm"` and routing key `crm.{type}`;
 the Laravel side maps `type` to an event class in `config/eventbus.php` → `inbox.events`.

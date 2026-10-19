@@ -6,7 +6,6 @@ namespace Khandroider\EventBus\Mappers;
 
 use Carbon\Carbon;
 use Illuminate\Contracts\Config\Repository;
-use Illuminate\Support\Str;
 use Khandroider\EventBus\Contracts\PublishableEvent;
 use Khandroider\EventBus\Enums\MessageDirectionEnum;
 use Khandroider\EventBus\Models\Message;
@@ -14,17 +13,11 @@ use Khandroider\EventBus\Services\EventSerializer;
 use Ramsey\Uuid\Uuid;
 
 /**
- * App\Modules\Candidate\Events\CandidateCreatedEvent
- *   → type        = candidate_created
- *   → routing_key = {source}.candidate.candidate_created
+ * Событие → исходящая строка: type = getEventName(), routing_key = {source}.{type}.
  */
 final readonly class PublishableEventToMessageMapper
 {
-    private const string EVENTS_NAMESPACE_SEGMENT = 'Events';
-
-    private const string EVENT_SUFFIX = 'Event';
-
-    private const string DEFAULT_MODULE = 'app';
+    private const string ROUTING_KEY_SEPARATOR = '.';
 
     public function __construct(
         private EventSerializer $serializer,
@@ -33,18 +26,13 @@ final readonly class PublishableEventToMessageMapper
 
     public function map(PublishableEvent $event): Message
     {
-        $segments = explode('\\', $event::class);
-        $shortName = (string) array_pop($segments);
-        $eventsIndex = array_search(self::EVENTS_NAMESPACE_SEGMENT, $segments, true);
-        $module = $eventsIndex !== false && $eventsIndex > 0 ? $segments[$eventsIndex - 1] : self::DEFAULT_MODULE;
-
-        $type = Str::snake((string) preg_replace('/'.self::EVENT_SUFFIX.'$/', '', $shortName));
+        $type = $event->getEventName();
 
         $message = new Message;
         $message->setId(Uuid::uuid4());
         $message->setDirection(MessageDirectionEnum::Outbound);
         $message->setType($type);
-        $message->setRoutingKey(implode('.', [$this->config->get('eventbus.source'), Str::snake($module), $type]));
+        $message->setRoutingKey($this->config->get('eventbus.source').self::ROUTING_KEY_SEPARATOR.$type);
         $message->setPayload($this->serializer->toArray($event));
         $message->setOccurredAt(Carbon::now());
 

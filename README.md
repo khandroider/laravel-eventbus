@@ -62,33 +62,39 @@ final readonly class CandidateCreatedEvent implements PublishableEvent
         public Carbon $createdAt,
         public CandidateSourceEnum $source,
     ) {}
+
+    public function getEventName(): string
+    {
+        return 'candidate_created';
+    }
 }
 
 // anywhere, preferably inside DB::transaction():
 event(new CandidateCreatedEvent($id, now(), CandidateSourceEnum::Site));
 ```
 
-Nothing else. The event is stored as an outbound message and published as
+Nothing else. With `EVENTBUS_SOURCE=hr` (the project / channel name, defaults to `APP_NAME`) the event is stored
+as an outbound message and published as
 
 ```
-exchange:    events            (topic, durable)
-routing key: taphr.candidate.candidate_created     ({source}.{module}.{type})
-body:        {"version":1,"id":"...","type":"candidate_created","source":"taphr",
+exchange:    events                 (topic, durable)
+routing key: hr.candidate_created   ({source}.{type})
+body:        {"version":1,"id":"...","type":"candidate_created","source":"hr",
               "occurred_at":"2026-10-19T10:00:00.000000Z",
               "payload":{"candidateId":"...","createdAt":"2026-10-19T10:00:00.000000Z","source":"site"}}
 ```
 
-`type` is the class name without the `Event` suffix in snake_case; `module` is the namespace segment before
-`Events` (`App\Modules\Candidate\Events\...` → `candidate`). Public properties become `payload`: dates as ISO-8601
-UTC, enums as values, UUIDs as strings, nested objects recursively. Eloquent models are rejected: put ids in events.
+`type` is whatever `getEventName()` returns (snake_case, no dots). Public properties become `payload`: dates as
+ISO-8601 UTC, enums as values, UUIDs as strings, nested objects recursively. Eloquent models are rejected: put ids
+in events.
 
 ## Receive events
 
 ```php
 // config/eventbus.php
 'inbox' => [
-    'queue' => 'taphr.inbox',
-    'bindings' => ['events' => ['crm.#', 'billing.invoice.*']],
+    'queue' => 'hr.inbox',
+    'bindings' => ['events' => ['crm.#', 'billing.invoice_*']],
     'events' => [
         'deal_won' => \App\Modules\Crm\Events\DealWonEvent::class,
     ],

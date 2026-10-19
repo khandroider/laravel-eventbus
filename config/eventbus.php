@@ -5,7 +5,8 @@ declare(strict_types=1);
 use Illuminate\Support\Str;
 
 return [
-    // Имя этого приложения в сообщениях (поле `source` и первый сегмент ключа маршрутизации).
+    // Имя проекта (канала) в шине: поле `source` в сообщении и первый сегмент ключа маршрутизации,
+    // например crm → crm.deal_won. По умолчанию из APP_NAME.
     'source' => env('EVENTBUS_SOURCE', Str::slug((string) env('APP_NAME', 'laravel'), '_')),
 
     // Соединение из config/queue.php с драйвером rabbitmq, у которого берём канал.
