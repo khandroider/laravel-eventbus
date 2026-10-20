@@ -60,7 +60,10 @@ final class EventBusServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->publishes([self::CONFIG_PATH => config_path('eventbus.php')], self::CONFIG_TAG);
-        $this->loadMigrationsFrom(self::MIGRATIONS_PATH);
+        // Миграция не грузится из vendor неявно: проект публикует её к себе и видит в database/migrations.
+        $this->publishes([
+            self::MIGRATION_STUB => database_path('migrations/' . date('Y_m_d_His') . '_' . self::MIGRATION_NAME),
+        ], self::MIGRATIONS_TAG);
 
         Bus::map($this->commandHandlers);
         Event::listen(PublishableEvent::class, StoreInOutboxOnPublishableEventListener::class);

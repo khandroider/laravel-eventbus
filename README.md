@@ -13,6 +13,7 @@ backoff, and turned into ordinary Laravel events.
 ```bash
 composer require khandroider/laravel-eventbus
 php artisan vendor:publish --tag=eventbus-config
+php artisan vendor:publish --tag=eventbus-migrations
 php artisan migrate
 ```
 
