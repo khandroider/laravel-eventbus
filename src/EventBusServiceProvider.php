@@ -32,7 +32,11 @@ final class EventBusServiceProvider extends ServiceProvider
 {
     private const string CONFIG_PATH = __DIR__.'/../config/eventbus.php';
 
-    private const string MIGRATIONS_PATH = __DIR__.'/../database/migrations';
+    private const string MIGRATION_STUB = __DIR__.'/../database/migrations/create_eventbus_messages_table.php';
+
+    private const string MIGRATION_NAME = 'create_eventbus_messages_table.php';
+
+    private const string MIGRATIONS_TAG = 'eventbus-migrations';
 
     private const string CONFIG_TAG = 'eventbus-config';
 
