@@ -102,7 +102,7 @@ in events.
 ],
 ```
 
-`eventbus:consume` stores each message in `eventbus_messages` (direction `inbound`; a duplicate id is ignored),
+`eventbus:consume` stores each message in `eventbus_messages` (direction `inbound`, `routing_key` = `{source}.{type}` from the envelope; a duplicate id is ignored),
 builds the mapped event class from `payload` via its constructor (named arguments, types cast back from JSON)
 and fires it with `event()`. Your normal listeners take it from there. An unmapped `type` is marked processed with
 `last_error = unmapped type` and logged as a warning.
